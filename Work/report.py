@@ -37,11 +37,12 @@ def read_portfolio(filename):
     with open(filename, 'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
-        for row in rows:
-            nshares = int(row[1])
-            price = float(row[2])
-            holding=[row[0],nshares,price]
-            portfolio.append({'name':row[0],'shares':nshares,'price':price})
+        for rowno, row in enumerate(rows):
+            record=dict(zip(headers,row))
+            nshares = int(record['shares'])
+            price = float(record['price'])
+            name=record['name']
+            portfolio.append({'name':name,'shares':nshares,'price':price})
     return portfolio
 if len(sys.argv)==2:
     filename=sys.argv[1]
@@ -71,8 +72,8 @@ for i in stocks_owned:
     valstockowned+=(float(prices[i])*int(quantity[i]))
 gain=total-valstockowned
 headers = ('Name', 'Shares', 'Price', 'Change')
-portfolio = read_portfolio('Data/portfolio.csv')
-prices = read_prices('Data/prices.csv')
+portfolio = read_portfolio('./Data/portfoliodate.csv')
+prices = read_prices('./Data/prices.csv')
 report = make_report(portfolio, prices)
 print("%10s %10s %10s %10s" % headers)
 underline=("..........")

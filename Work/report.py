@@ -43,6 +43,15 @@ def read_portfolio(filename):
             holding=[row[0],nshares,price]
             portfolio.append({'name':row[0],'shares':nshares,'price':price})
     return portfolio
+def print_report(report):
+    headers = ('Name', 'Shares', 'Price', 'Change')
+    portfolio = read_portfolio('Data/portfolio.csv')
+    prices = read_prices('Data/prices.csv')
+    print("%10s %10s %10s %10s" % headers)
+    underline=("..........")
+    print(f"{underline} {underline} {underline} {underline}")
+    for r in report:
+        print('%10s %10d %10.8s %10.2f' % r)
 if len(sys.argv)==2:
     filename=sys.argv[1]
 else:
@@ -70,13 +79,8 @@ current_value=0
 for i in stocks_owned:
     valstockowned+=(float(prices[i])*int(quantity[i]))
 gain=total-valstockowned
-headers = ('Name', 'Shares', 'Price', 'Change')
-portfolio = read_portfolio('Data/portfolio.csv')
-prices = read_prices('Data/prices.csv')
+portfolio=read_portfolio('Data/portfolio.csv')
+value=sum([s['shares']*float(prices[s['name']])for s in portfolio])
 report = make_report(portfolio, prices)
-print("%10s %10s %10s %10s" % headers)
-underline=("..........")
-print(f"{underline} {underline} {underline} {underline}")
-for r in report:
-    print('%10s %10d %10.8s %10.2f' % r)
-# Exercise 2.4
+print(value)
+print_report(report)

@@ -1,20 +1,24 @@
 import csv
 import sys
 def portfolio_cost(filename):
-    amount=0
+    total_cost=0
     with open(filename, 'rt') as f:
-        next(f)
         rows = csv.reader(f)
-        for line in rows:
+        headers = next(rows)
+        for rowno, row in enumerate(rows, start=1):
+            record = dict(zip(headers, row))
             try:
-                amount+= (float(line[1])*float(line[2]))
+                nshares = int(record['shares'])
+                price = float(record['price'])
+                total_cost += (nshares * price)
+            # This catches errors in int() and float() conversions above
             except ValueError:
-                print("Please check for missing values!")
-    return amount
+                print(f'Row {rowno}: Bad row: {row}')
+    return total_cost
 
 if len(sys.argv)==2:
     filename=sys.argv[1]
 else:
     filename='portfolio.csv'
-cost= portfolio_cost('portfolio.csv')
+cost= portfolio_cost('portfoliodate.csv')
 print("Total cost:", cost)
